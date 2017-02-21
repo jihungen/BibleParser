@@ -4,7 +4,7 @@ import codecs
 
 class Abbreviation(object):
     PATTERN_BOOK = u'[가-힣]{1,2}'
-    PATTERN_CHAPTER_VERSE = u'[0-9]+[0-9|\:|\-|\,]+'
+    PATTERN_CHAPTER_VERSE = u'[0-9]{1,3}\:[0-9|\-|\,]*[0-9]'
     
     @classmethod
     def identify_bible_verse(cls, contents):
