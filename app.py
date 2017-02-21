@@ -66,7 +66,7 @@ def show_bible_text():
         
     chapter = ChapterVerseExtractor.extract_chapter(chapter_verse)
     verses = ChapterVerseExtractor.extract_verses(chapter_verse)
-    bible = Bible(book_fullname, chapter, verses, bible_word)
+    bible = Bible(book_fullname, chapter, verses, chapter_verse)
     
     for version in version_list:
         text = query_with_version[version].get_text(bible)
