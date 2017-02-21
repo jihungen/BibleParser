@@ -21,8 +21,8 @@
 			$('#please_wait_text').html('텍스트 분석 중...');
 			$("#please_wait_modal").modal('show');
 			
-			$.getJSON('/_parse_bible_verse', {
-				text: $('#bible_input_text').val()
+			$.getJSON('/_parse_message', {
+				message: $('#input_message').val()
 			}, function (data) {
 				$("#please_wait_modal").modal('hide');
 				build_verse_list(data.result);
@@ -35,8 +35,8 @@
 			$('#please_wait_text').html('말씀 조회중...');
 			$("#please_wait_modal").modal('show');
 			
-			$.getJSON('/_show_bible_word', {
-				verse: selected_verse
+			$.getJSON('/_show_bible_text', {
+				bible_word: selected_verse
 			}, function (data) {
 				$("#please_wait_modal").modal('hide');
 				show_word(selected_verse, data.result, null);
@@ -50,8 +50,8 @@
 			$('#please_wait_text').html('말씀 조회중...');
 			$("#please_wait_modal").modal('show');
 			
-			$.getJSON('/_show_bible_word', {
-				verse: selected_verse
+			$.getJSON('/_show_bible_text', {
+				bible_word: selected_verse
 			}, function (data) {
 				$("#please_wait_modal").modal('hide');
 				show_word(selected_verse, data.result, selected_verse);
@@ -142,7 +142,7 @@
 					<div class="modal-body">
 						<div class="form-group">
 							<label for="comment">성경구절이 포함된 텍스트를 입력해주세요:</label>
-							<textarea class="form-control" rows="10" id="bible_input_text"></textarea>
+							<textarea class="form-control" rows="10" id="input_message"></textarea>
 						</div>
 					</div>
 					

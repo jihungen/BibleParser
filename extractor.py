@@ -2,28 +2,27 @@
 import re
 import codecs
 
-class Abbreviation(object):
+class BibleWordExtractor(object):
     PATTERN_BOOK = u'[가-힣]{1,2}'
     PATTERN_CHAPTER_VERSE = u'[0-9]{1,3}\:[0-9|\-|\,]*[0-9]'
     
-    @classmethod
-    def identify_bible_verse(cls, contents):
-        verse_pattern = re.compile(cls.PATTERN_BOOK + u'[ ]?' + cls.PATTERN_CHAPTER_VERSE)
-        return verse_pattern.findall(contents)
+    def __init__(self):
+        self.bible_word_pattern = re.compile(self.PATTERN_BOOK + u'[ ]?' + self.PATTERN_CHAPTER_VERSE)
+        self.book_pattern = re.compile(self.PATTERN_BOOK)
+        self.chapter_verse_pattern = re.compile(self.PATTERN_CHAPTER_VERSE)
+    
+    def extract_bible_word(self, contents):
+        return self.bible_word_pattern.findall(contents)
         
-    @classmethod
-    def identify_book(cls, bible_verse):
-        book_pattern = re.compile(cls.PATTERN_BOOK)
-        result_list = book_pattern.findall(bible_verse)
+    def extract_book(self, book_chapter_verse):
+        result_list = self.book_pattern.findall(book_chapter_verse)
         if result_list is None or len(result_list) <= 0:
             return None
         
         return result_list[0]
         
-    @classmethod
-    def identify_verse(cls, bible_verse):
-        book_pattern = re.compile(cls.PATTERN_CHAPTER_VERSE)
-        result_list = book_pattern.findall(bible_verse)
+    def extract_chapter_verse(self, book_chapter_verse):
+        result_list = self.chapter_verse_pattern.findall(book_chapter_verse)
         if result_list is None or len(result_list) <= 0:
             return None
         
@@ -32,7 +31,7 @@ class Abbreviation(object):
 class Book(object):
     """Bible book matching between Korean abbreviation and full name, 
         and between Korean and English (for DB)."""
-    bible_abbr_to_kor = {
+    book_abbr_to_fullname = {
     	u'창': u'창세기',
     	u'출': u'출애굽기',
     	u'레': u'레위기',
@@ -102,34 +101,34 @@ class Book(object):
     }
     
     @classmethod
-    def get_kor_bible_from_abbr(cls, abbr):
-        if abbr not in cls.bible_abbr_to_kor.keys():
+    def get_fullname(cls, abbr):
+        if abbr not in cls.book_abbr_to_fullname.keys():
             return None
         
-        return cls.bible_abbr_to_kor[abbr]
+        return cls.book_abbr_to_fullname[abbr]
 
-class Verse(object):
+class ChapterVerseExtractor(object):
     """Extracts chapter and verses from abbreviation forms"""
     @staticmethod
-    def get_chapter(verse_str):
-        if u':' not in verse_str:
+    def extract_chapter(chapter_verse_str):
+        if u':' not in chapter_verse_str:
             return -1
             
-        pos = verse_str.index(u':')
-        return int(verse_str[:pos])
+        pos = chapter_verse_str.index(u':')
+        return int(chapter_verse_str[:pos])
         
     @staticmethod
-    def get_verses(verse_str):
-        if u':' not in verse_str:
+    def extract_verses(chapter_verse_str):
+        if u':' not in chapter_verse_str:
             return []
         
-        pos = verse_str.index(u':')
+        pos = chapter_verse_str.index(u':')
         result_list = []
         
         prv_num = u''
         num = u''
         op = u''
-        for ch in verse_str[(pos + 1):]:
+        for ch in chapter_verse_str[(pos + 1):]:
             if ch in u'0123456789':
                 num += ch
             else:
@@ -144,7 +143,7 @@ class Verse(object):
                         num = u''
                         op = ch
                 else:
-                    curr_list = Verse.get_verse_list(prv_num, num)
+                    curr_list = ChapterVerseExtractor.extract_verse_range(prv_num, num)
                     if len(curr_list) > 0:
                         result_list.extend(curr_list)
                     prv_num = u''
@@ -154,14 +153,14 @@ class Verse(object):
         if len(op) <= 0:
             result_list.append(int(num))
         else:
-            curr_list = Verse.get_verse_list(prv_num, num)
+            curr_list = ChapterVerseExtractor.extract_verse_range(prv_num, num)
             if len(curr_list) > 0:
                 result_list.extend(curr_list)
         
         return result_list
     
     @staticmethod
-    def get_verse_list(str_from, str_to):
+    def extract_verse_range(str_from, str_to):
         int_from = int(str_from)
         int_to = int(str_to)
         

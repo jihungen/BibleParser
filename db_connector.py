@@ -3,7 +3,7 @@ import sqlite3
 from bible import Bible
 
 class DBBook(object):
-    bible_kor_to_db = {
+    book_fullname_to_db = {
     	u'창세기': 'Genesis',
     	u'출애굽기': 'Exodus',
     	u'레위기': 'Leviticus',
@@ -73,23 +73,23 @@ class DBBook(object):
     }
     
     @classmethod
-    def get_db_bible_from_kor(cls, kor_bible):
-        if kor_bible not in cls.bible_kor_to_db.keys():
+    def get_db_book(cls, book_fullname):
+        if book_fullname not in cls.book_fullname_to_db.keys():
             return None
         
-        return cls.bible_kor_to_db[kor_bible]
+        return cls.book_fullname_to_db[book_fullname]
         
     @classmethod
-    def is_valid(cls, kor_bible):
-        return kor_bible in cls.bible_kor_to_db.keys()
+    def is_valid(cls, book_fullname):
+        return book_fullname in cls.book_fullname_to_db.keys()
 
 class Query(object):
     def __init__(self, db_file):
         self.conn = sqlite3.connect(db_file)
         self.cursor = self.conn.cursor()
         
-    def get_result(self, bible):
-        db_book = DBBook.get_db_bible_from_kor(bible.book)
+    def get_text(self, bible):
+        db_book = DBBook.get_db_book(bible.book)
         if db_book is None:
             return {}
         
@@ -105,13 +105,13 @@ class Query(object):
         for curr in self.cursor:
             chapter = curr[1]
             verse = curr[2]
-            contents = curr[5]
+            text = curr[5]
             
             key = str(verse)
             if key in results:
-                results[key] += ' ' + contents
+                results[key] += ' ' + text
             else:
-                results[key] = contents
+                results[key] = text
         
         return results
         

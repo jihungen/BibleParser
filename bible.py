@@ -1,43 +1,40 @@
 # -*- coding: utf-8 -*-
 class Bible(object):
-    def __init__(self, book, chapter, verse_list, verse_info):
+    def __init__(self, book, chapter, verse_list, chapter_verse_form):
         self.book = book
         self.chapter = chapter
         self.verse_list = verse_list
-        self.verse_info = verse_info
-        self.words = {}
+        self.chapter_verse_form = chapter_verse_form
+        self.text = {}
         
-    def add_result(self, version, results):
-        if version in self.words:
-            del self.words[version]
+    def add_text(self, version, new_text):
+        if version in self.text:
+            del self.text[version]
         
-        self.words[version] = results
-
-    def test(self):
-        print self.book + u' ' + str(self.chapter) + u':' + str(self.verse_list)
+        self.text[version] = new_text
         
-    def get_info_str(self):
-        return self.book + u' ' + self.verse_info
+    def get_book_chapter_verse(self):
+        return self.book + u' ' + self.chapter_verse_form
         
-    def get_words_in_version_str(self, version):
+    def get_text_in_version_str(self, version):
         content = u''
         for verse in self.verse_list:
             verse_str = str(verse)
-            if verse_str in self.words[version]:
+            if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                content += verse_str + '. ' + self.words[version][verse_str]
+                content += verse_str + '. ' + self.text[version][verse_str]
                 
         return content
                 
-    def get_words_in_verse_str(self, verse, version_list):
+    def get_text_in_verse_str(self, verse, version_list):
         content = u''
         for version in version_list:
             verse_str = str(verse)
-            if verse_str in self.words[version]:
+            if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                content += verse_str + '. ' + self.words[version][verse_str]
+                content += verse_str + '. ' + self.text[version][verse_str]
                 
         return content
         
@@ -46,16 +43,16 @@ class Bible(object):
             return u''
             
         for version in version_list:
-            if not self.words[version]:
+            if not self.text[version]:
                 return u'말씀을 찾을 수 없습니다.'
         
-        content = self.get_info_str() + u'\n'
+        content = self.get_book_chapter_verse() + u'\n'
         if b_version_first:
             for version in version_list:
-                if version in self.words:
-                    content += self.get_words_in_version_str(version) + u'\n'
+                if version in self.text:
+                    content += self.get_text_in_version_str(version) + u'\n'
         else:
             for verse in self.verse_list:
-                content += self.get_words_in_verse_str(verse, version_list) + u'\n'
+                content += self.get_text_in_verse_str(verse, version_list) + u'\n'
 
         return content
