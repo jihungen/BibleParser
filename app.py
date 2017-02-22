@@ -3,7 +3,7 @@ import codecs
 from flask import Flask, request, render_template, jsonify
 from extractor import BibleWordExtractor, Book, ChapterVerseExtractor
 from bible import Bible
-from db_connector import Query, DBBook
+from db_connector import Execution, DBBook
 from datetime import datetime
 from log import Log
 
@@ -56,8 +56,8 @@ def parse_message():
 def show_bible_text():
     version_list = [KOR_BIBLE, ENG_BIBLE]
     query_with_version = {}
-    query_with_version[KOR_BIBLE] = Query(KOR_BIBLE)
-    query_with_version[ENG_BIBLE] = Query(ENG_BIBLE)
+    query_with_version[KOR_BIBLE] = Execution(KOR_BIBLE)
+    query_with_version[ENG_BIBLE] = Execution(ENG_BIBLE)
     
     bible_word = request.args.get('bible_word')
     book_fullname, chapter_verse = decode_bible_word_form(bible_word)

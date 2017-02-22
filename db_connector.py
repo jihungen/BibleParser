@@ -3,6 +3,7 @@ import sqlite3
 from bible import Bible
 
 class DBBook(object):
+    '''Transform book fullname to the table (book) in DB'''
     book_fullname_to_db = {
     	u'창세기': 'Genesis',
     	u'출애굽기': 'Exodus',
@@ -83,7 +84,8 @@ class DBBook(object):
     def is_valid(cls, book_fullname):
         return book_fullname in cls.book_fullname_to_db.keys()
 
-class Query(object):
+class Execution(object):
+    '''Execute the query with given bible information'''
     def __init__(self, db_file):
         self.conn = sqlite3.connect(db_file)
         self.cursor = self.conn.cursor()
@@ -107,6 +109,7 @@ class Query(object):
             verse = curr[2]
             text = curr[5]
             
+            # Some bible texts are divided into multiple verses.
             key = str(verse)
             if key in results:
                 results[key] += ' ' + text

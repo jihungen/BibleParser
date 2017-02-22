@@ -3,18 +3,22 @@ import re
 import codecs
 
 class BibleWordExtractor(object):
+    '''Extract bible information from the message'''
     PATTERN_BOOK = u'[가-힣]{1,2}'
     PATTERN_CHAPTER_VERSE = u'[0-9]{1,3}\:[0-9|\-|\,]*[0-9]'
     
     def __init__(self):
+        '''Initialize the patterns for extraction'''
         self.bible_word_pattern = re.compile(self.PATTERN_BOOK + u'[ ]?' + self.PATTERN_CHAPTER_VERSE)
         self.book_pattern = re.compile(self.PATTERN_BOOK)
         self.chapter_verse_pattern = re.compile(self.PATTERN_CHAPTER_VERSE)
     
     def extract_bible_word(self, contents):
+        '''Extract the bible word (book + chapter + verses)'''
         return self.bible_word_pattern.findall(contents)
         
     def extract_book(self, book_chapter_verse):
+        '''Extract the bible book'''
         result_list = self.book_pattern.findall(book_chapter_verse)
         if result_list is None or len(result_list) <= 0:
             return None
@@ -22,6 +26,7 @@ class BibleWordExtractor(object):
         return result_list[0]
         
     def extract_chapter_verse(self, book_chapter_verse):
+        '''Extract the bible chapter and verse'''
         result_list = self.chapter_verse_pattern.findall(book_chapter_verse)
         if result_list is None or len(result_list) <= 0:
             return None
@@ -29,8 +34,7 @@ class BibleWordExtractor(object):
         return result_list[0]
             
 class Book(object):
-    """Bible book matching between Korean abbreviation and full name, 
-        and between Korean and English (for DB)."""
+    '''Bible book matching between Korean abbreviation and full name'''
     book_abbr_to_fullname = {
     	u'창': u'창세기',
     	u'출': u'출애굽기',
@@ -108,9 +112,10 @@ class Book(object):
         return cls.book_abbr_to_fullname[abbr]
 
 class ChapterVerseExtractor(object):
-    """Extracts chapter and verses from abbreviation forms"""
+    '''Extract chapter and verses from chapter-verse abbreviation form'''
     @staticmethod
     def extract_chapter(chapter_verse_str):
+        '''Extract chapter from chapter-verse abbreviation form'''
         if u':' not in chapter_verse_str:
             return -1
             
@@ -119,6 +124,7 @@ class ChapterVerseExtractor(object):
         
     @staticmethod
     def extract_verses(chapter_verse_str):
+        '''Extract verse from chapter-verse abbreviation form'''
         if u':' not in chapter_verse_str:
             return []
         
@@ -161,6 +167,7 @@ class ChapterVerseExtractor(object):
     
     @staticmethod
     def extract_verse_range(str_from, str_to):
+        '''Extract verses from the range form'''
         int_from = int(str_from)
         int_to = int(str_to)
         

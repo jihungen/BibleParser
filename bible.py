@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 class Bible(object):
+    '''Represent Bible class that shows book, chapter, verses and bible text'''
     def __init__(self, book, chapter, verse_list, chapter_verse_form):
+        '''Initialize the object by book, chapter, verses and chapter-verse abbreviation form'''
         self.book = book
         self.chapter = chapter
         self.verse_list = verse_list
@@ -8,15 +10,18 @@ class Bible(object):
         self.text = {}
         
     def add_text(self, version, new_text):
+        '''Add bible text'''
         if version in self.text:
             del self.text[version]
         
         self.text[version] = new_text
         
     def get_book_chapter_verse(self):
+        '''Get book and chapter-verse form'''
         return self.book + u' ' + self.chapter_verse_form
         
-    def get_text_in_version_str(self, version):
+    def get_print_str_in_version(self, version):
+        '''Print the string by verse and version'''
         content = u''
         for verse in self.verse_list:
             verse_str = str(verse)
@@ -27,7 +32,8 @@ class Bible(object):
                 
         return content
                 
-    def get_text_in_verse_str(self, verse, version_list):
+    def get_print_str_in_verse(self, verse, version_list):
+        '''Print the string by version and verse'''
         content = u''
         for version in version_list:
             verse_str = str(verse)
@@ -39,6 +45,7 @@ class Bible(object):
         return content
         
     def get_print_str(self, version_list, b_version_first):
+        '''Print the string of chapter, verse and text'''
         if not version_list or len(version_list) <= 0:
             return u''
             
@@ -50,9 +57,9 @@ class Bible(object):
         if b_version_first:
             for version in version_list:
                 if version in self.text:
-                    content += self.get_text_in_version_str(version) + u'\n'
+                    content += self.get_print_str_in_version(version) + u'\n'
         else:
             for verse in self.verse_list:
-                content += self.get_text_in_verse_str(verse, version_list) + u'\n'
+                content += self.get_print_str_in_verse(verse, version_list) + u'\n'
 
         return content
