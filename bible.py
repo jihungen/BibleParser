@@ -8,18 +8,18 @@ class Bible(object):
         self.verse_list = verse_list
         self.chapter_verse_form = chapter_verse_form
         self.text = {}
-        
+
     def add_text(self, version, new_text):
         '''Add bible text'''
         if version in self.text:
             del self.text[version]
-        
+
         self.text[version] = new_text
-        
+
     def get_book_chapter_verse(self):
         '''Get book and chapter-verse form'''
         return self.book + u' ' + self.chapter_verse_form
-        
+
     def get_print_str_in_version(self, version):
         '''Print the string by verse and version'''
         content = u''
@@ -29,9 +29,9 @@ class Bible(object):
                 if len(content) > 0:
                     content += u'\n'
                 content += verse_str + '. ' + self.text[version][verse_str]
-                
+
         return content
-                
+
     def get_print_str_in_verse(self, verse, version_list):
         '''Print the string by version and verse'''
         content = u''
@@ -41,18 +41,18 @@ class Bible(object):
                 if len(content) > 0:
                     content += u'\n'
                 content += verse_str + '. ' + self.text[version][verse_str]
-                
+
         return content
-        
+
     def get_print_str(self, version_list, b_version_first):
         '''Print the string of chapter, verse and text'''
         if not version_list or len(version_list) <= 0:
             return u''
-            
+
         for version in version_list:
             if not self.text[version]:
                 return u'말씀을 찾을 수 없습니다.'
-        
+
         content = self.get_book_chapter_verse() + u'\n'
         if b_version_first:
             for version in version_list:
