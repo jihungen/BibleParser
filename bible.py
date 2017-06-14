@@ -81,5 +81,5 @@ class Bible(object):
         ord_val = ord(ch)
         if ord_val >= ord('a') and ord_val <= ord('z') or ord_val >= ord('A') and ord_val <= ord('Z'):
             return True
-        else
+        else:
             return False
