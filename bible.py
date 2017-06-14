@@ -30,7 +30,8 @@ class Bible(object):
             if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                content += verse_str + '. ' + refine_text(self.text[version][verse_str])
+                curr_text = refine_text(self.text[version][verse_str])
+                content += verse_str + '. ' + curr_text
 
         return content
 
@@ -42,7 +43,8 @@ class Bible(object):
             if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                content += verse_str + '. ' + refine_text(self.text[version][verse_str])
+                curr_text = refine_text(self.text[version][verse_str])
+                content += verse_str + '. ' + curr_text
 
         return content
 
