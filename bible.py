@@ -66,6 +66,9 @@ class Bible(object):
     
     @staticmethod
     def refine_text(text):
+        if not re.search(u'[가-힣]+', text):
+            return text
+            
         refined = u''
         for ch in text:
             if not is_alpha_unicode(ch):
