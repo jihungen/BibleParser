@@ -68,10 +68,21 @@ class Bible(object):
 
 def refine_text(text):
     if not re.search(u'[가-힣]+', text):
+        '''Refine the only Korean text.'''
         return text
 
     refined = u''
+    cnt_bracket = 0
     for ch in text:
+        if ch == u'(':
+            cnt_bracket += 1
+            
+        if cnt_bracket > 0:
+            if ch == u')':
+                cnt_bracket -= 1
+                
+            continue
+        
         if not is_alpha_unicode(ch):
             refined += ch
 
