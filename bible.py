@@ -28,7 +28,7 @@ class Bible(object):
             if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                content += verse_str + '. ' + self.text[version][verse_str]
+                content += verse_str + '. ' + self.refine_text(self.text[version][verse_str])
 
         return content
 
@@ -40,7 +40,7 @@ class Bible(object):
             if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                content += verse_str + '. ' + self.text[version][verse_str]
+                content += verse_str + '. ' + self.refine_text(self.text[version][verse_str])
 
         return content
 
@@ -63,3 +63,20 @@ class Bible(object):
                 content += self.get_print_str_in_verse(verse, version_list) + u'\n'
 
         return content
+    
+    @staticmethod
+    def refine_text(text):
+        refined = u''
+        for ch in text:
+            if not is_alpha_unicode(ch):
+                refined += ch
+                
+        return refined
+    
+    @staticmethod
+    def is_alpha_unicode(ch):
+        ord_val = ord(ch)
+        if ord_val >= ord('a') and ord_val <= ord('z') or ord_val >= ord('A') and ord_val <= ord('Z'):
+            return True
+        else
+            return False
