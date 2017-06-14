@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import re
+
 class Bible(object):
     '''Represent Bible class that shows book, chapter, verses and bible text'''
     def __init__(self, book, chapter, verse_list, chapter_verse_form):
