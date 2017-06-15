@@ -36,11 +36,14 @@
 
 		$(document).on('click', '.bible_verse_class', function() {
 			var selected_verse = $(this).data("bible_verse");
+			var remove_annotation = $('#remove_annotation').is(':checked');
+			
 			$('#please_wait_text').html('말씀 조회중...');
 			$("#please_wait_modal").modal('show');
 
 			$.getJSON('/_show_bible_text', {
-				bible_word: selected_verse
+				bible_word: selected_verse,
+				remove_annotation: remove_annotation
 			}, function (data) {
 				$("#please_wait_modal").modal('hide');
 				show_word(selected_verse, data.result, null);
@@ -50,19 +53,14 @@
 
 		$('#add_bible_verse').click(function () {
 			var selected_verse = $('#new_book').val() + ' ' + $('#new_bible_verse').val();
-			var remove_annotation = false;
-			if ($('#remove_annotation').is(':checked'))
-				remove_annotation = true;
-			
-			var show_please_wait_text = '말씀 조회중...';
-			if (remove_annotation)
-				show_please_wait_text = '말씀 조회중 (주석 제거)...';
+			var remove_annotation = $('#remove_annotation').is(':checked');
 
-			$('#please_wait_text').html(show_please_wait_text);
+			$('#please_wait_text').html('말씀 조회중...');
 			$("#please_wait_modal").modal('show');
 
 			$.getJSON('/_show_bible_text', {
-				bible_word: selected_verse
+				bible_word: selected_verse,
+				remove_annotation: remove_annotation
 			}, function (data) {
 				$("#please_wait_modal").modal('hide');
 				show_word(selected_verse, data.result, selected_verse);
@@ -121,8 +119,13 @@
 	</head>
 	<body>
 		<div class="panel panel-primary">
-			<div class="panel-heading">말씀 구절</div>
-			<label class="checkbox-inline"><input type="checkbox" id="remove_annotation">주석 제거</label>
+			<div class="panel-heading">
+				말씀 구절
+				<label class="checkbox-inline">
+					<input type="checkbox" id="remove_annotation">주석 제거
+				</label>
+			</div>
+			
 			<div class="panel-body" style="max-height: 300;overflow-y: scroll;">
 				<div class="list-group" id="bible_verse_list">
 				</div>
