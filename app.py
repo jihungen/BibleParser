@@ -61,7 +61,7 @@ def show_bible_text():
     query_with_version[ENG_BIBLE] = Execution(ENG_BIBLE)
 
     bible_word = request.args.get('bible_word')
-    b_remove_annotation = True if request.POST.get('remove_annotation') == 'true' else False
+    b_remove_annotation = True if request.args.get('remove_annotation') == 'true' else False
     
     book_fullname, chapter_verse = decode_bible_word_form(bible_word)
     if book_fullname is None or chapter_verse is None:
