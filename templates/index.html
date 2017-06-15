@@ -37,8 +37,8 @@
 		$(document).on('click', '.bible_verse_class', function() {
 			var selected_verse = $(this).data("bible_verse");
 			var remove_annotation = false;
- +			if ($('#remove_annotation').is(':checked'))
- +				remove_annotation = true;
+			if ($('#remove_annotation').is(':checked'))
+				remove_annotation = true;
 			
 			$('#please_wait_text').html('말씀 조회중...');
 			$("#please_wait_modal").modal('show');
@@ -56,8 +56,8 @@
 		$('#add_bible_verse').click(function () {
 			var selected_verse = $('#new_book').val() + ' ' + $('#new_bible_verse').val();
 			var remove_annotation = false;
- +			if ($('#remove_annotation').is(':checked'))
- +				remove_annotation = true;
+			if ($('#remove_annotation').is(':checked'))
+				remove_annotation = true;
 
 			$('#please_wait_text').html('말씀 조회중...');
 			$("#please_wait_modal").modal('show');
