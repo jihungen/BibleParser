@@ -61,6 +61,8 @@ def show_bible_text():
     query_with_version[ENG_BIBLE] = Execution(ENG_BIBLE)
 
     bible_word = request.args.get('bible_word')
+    b_remove_annotation = request.args.get('remove_annotation')
+    
     book_fullname, chapter_verse = decode_bible_word_form(bible_word)
     if book_fullname is None or chapter_verse is None:
         return jsonify(result='Error')
@@ -72,7 +74,7 @@ def show_bible_text():
     for version in version_list:
         text = query_with_version[version].get_text(bible)
         bible.add_text(version, text)
-    content = bible.get_print_str(version_list, False)
+    content = bible.get_print_str(version_list, False, b_remove_annotation)
 
     for version in version_list:
         query_with_version[version].close_connection()
