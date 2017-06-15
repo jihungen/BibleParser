@@ -22,7 +22,7 @@ class Bible(object):
         '''Get book and chapter-verse form'''
         return self.book + u' ' + self.chapter_verse_form
 
-    def get_print_str_in_version(self, version):
+    def get_print_str_in_version(self, version, b_remove_annotation):
         '''Print the string by verse and version'''
         content = u''
         for verse in self.verse_list:
@@ -30,12 +30,16 @@ class Bible(object):
             if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                curr_text = refine_text(self.text[version][verse_str])
+                
+                if b_remove_annotation:
+                    curr_text = refine_text(self.text[version][verse_str])
+                else: 
+                    curr_text = self.text[version][verse_str]
                 content += verse_str + '. ' + curr_text
 
         return content
 
-    def get_print_str_in_verse(self, verse, version_list):
+    def get_print_str_in_verse(self, verse, version_list, b_remove_annotation):
         '''Print the string by version and verse'''
         content = u''
         for version in version_list:
@@ -43,12 +47,16 @@ class Bible(object):
             if verse_str in self.text[version]:
                 if len(content) > 0:
                     content += u'\n'
-                curr_text = refine_text(self.text[version][verse_str])
+                
+                if b_remove_annotation:
+                    curr_text = refine_text(self.text[version][verse_str])
+                else: 
+                    curr_text = self.text[version][verse_str]
                 content += verse_str + '. ' + curr_text
 
         return content
 
-    def get_print_str(self, version_list, b_version_first):
+    def get_print_str(self, version_list, b_version_first, b_remove_annotation):
         '''Print the string of chapter, verse and text'''
         if not version_list or len(version_list) <= 0:
             return u''
@@ -61,10 +69,10 @@ class Bible(object):
         if b_version_first:
             for version in version_list:
                 if version in self.text:
-                    content += self.get_print_str_in_version(version) + u'\n'
+                    content += self.get_print_str_in_version(version, b_remove_annotation) + u'\n'
         else:
             for verse in self.verse_list:
-                content += self.get_print_str_in_verse(verse, version_list) + u'\n'
+                content += self.get_print_str_in_verse(verse, version_list, b_remove_annotation) + u'\n'
 
         return content
 
