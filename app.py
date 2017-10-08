@@ -80,6 +80,36 @@ def show_bible_text():
         query_with_version[version].close_connection()
 
     return jsonify(result=content)
+    
+@app.route('/_download_bible_text')
+def downlaod_bible_text():
+    version_list = [KOR_BIBLE, ENG_BIBLE]
+    query_with_version = {}
+    query_with_version[KOR_BIBLE] = Execution(KOR_BIBLE)
+    query_with_version[ENG_BIBLE] = Execution(ENG_BIBLE)
+
+    bible_word = request.args.get('bible_word')
+    print(bible_word.encode('utf-8').strip())
+    b_remove_annotation = True if request.args.get('remove_annotation') == 'true' else False
+    
+    book_fullname, chapter_verse = decode_bible_word_form(bible_word)
+    if book_fullname is None or chapter_verse is None:
+        return jsonify(result='Error')
+
+    chapter = ChapterVerseExtractor.extract_chapter(chapter_verse)
+    verses = ChapterVerseExtractor.extract_verses(chapter_verse)
+    bible = Bible(book_fullname, chapter, verses, chapter_verse)
+
+    for version in version_list:
+        text = query_with_version[version].get_text(bible)
+        bible.add_text(version, text)
+    content = bible.get_ppt_str(version_list, b_remove_annotation)
+    print(content)
+
+    for version in version_list:
+        query_with_version[version].close_connection()
+
+    return jsonify(result=content)
 
 if __name__ == '__main__':
     app.run(debug=True)
