@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
-from file_util import copy_directory, zip_directory, rename_file, read_file_content, write_file_content, copy_file, remove_directory
+from file_util import copy_directory, zip_directory, rename_file, read_file_content, write_file_content, copy_file, remove_directory, remove_file
 
 PPTX_DIR = './pptx/'
 PPTX_BASE = PPTX_DIR + 'base'
@@ -45,6 +45,9 @@ def build_pptx(pptx_content):
         write_file_content(slide_filename, slide)
         
         copy_file(PPTX_TEMPLATES + '/ppt/slides/_rels/slide.xml.rels', working_dir + '/ppt/slides/_rels/slide%d.xml.rels' % (idx + 1))
+        
+    remove_file(working_dir + '/ppt/_rels/.keep')
+    remove_file(working_dir + '/ppt/slides/_rels/.keep')
         
     zip_directory(working_dir, output_filename)
     remove_directory(working_dir)

@@ -1,5 +1,6 @@
 import shutil, errno
 import codecs
+import os
 
 def copy_directory(src_dir, dest_dir):
     try:
@@ -15,6 +16,9 @@ def zip_directory(src_dir, dest_file):
     
 def remove_directory(target_dir):
     shutil.rmtree(target_dir)
+    
+def remove_file(target_file):
+    os.remove(target_file)
     
 def rename_file(src_file, dest_file):
     shutil.move(src_file, dest_file)
