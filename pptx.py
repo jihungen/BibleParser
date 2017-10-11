@@ -48,7 +48,7 @@ def build_pptx(pptx_content):
         
     remove_file(working_dir + '/ppt/_rels/.keep')
     remove_file(working_dir + '/ppt/slides/_rels/.keep')
-        
+    
     zip_directory(working_dir, output_filename)
     remove_directory(working_dir)
     
