@@ -23,12 +23,7 @@ def build_pptx(pptx_content):
     if pptx_content is None or len(pptx_content) <= 0:
         return PPTX_ERROR_FILE
     
-    from db_connector import DBBook
-    book_kor = pptx_content[0]['book']
-    book_eng = DBBook.get_db_book(book_kor)
-    chapter_verse_form = pptx_content[0]['chapter_verse_form']
-    
-    output_filename = book_eng + ' ' + chapter_verse_form
+    output_filename = str(time.time())
     working_dir = PPTX_DIR + output_filename
     
     copy_directory(PPTX_BASE, working_dir)
@@ -54,8 +49,15 @@ def build_pptx(pptx_content):
     zip_directory(working_dir, output_filename)
     remove_directory(working_dir)
     
-    rename_file(output_filename + '.zip', PPTX_FILES + output_filename + '.pptx')
-    return output_filename + '.pptx'
+    from db_connector import DBBook
+    book_kor = pptx_content[0]['book']
+    book_eng = DBBook.get_db_book(book_kor)
+    chapter_verse_form = pptx_content[0]['chapter_verse_form']
+    pptx_filename = book_eng + ' ' + chapter_verse_form + '.pptx'
+    
+    rename_file(output_filename + '.zip', PPTX_FILES + pptx_filename)
+    
+    return pptx_filename
     
 def build_content_types(no_slides):
     content = u''
