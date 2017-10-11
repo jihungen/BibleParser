@@ -71,6 +71,19 @@
 			});
 			return false;
 		});
+		
+		$('#download_pptx_file').click(function () {
+			var selected_verse = $('#word_modal_title').html();
+			var remove_annotation = false;
+			if ($('#remove_annotation').is(':checked'))
+				remove_annotation = true;
+				
+			var pptx_url = '/_build_pptx_file?bible_word=' + selected_verse
+							+ '&remove_annotation=' + remove_annotation;
+			window.open(pptx_url, '_blank');
+			
+			return false;
+		});
 	});
 
 	function build_verse_list(verse_list) {
@@ -193,6 +206,9 @@
 
 					<div class="modal-footer">
 						<div class="pull-right">
+							<button type="button" class="btn btn-secondary pull-left" id="download_pptx_file">
+								PPT 받기
+							</button>
 							<button type="button" class="btn btn-secondary btn_clipboard pull-left"
 								data-clipboard-action="copy" data-clipboard-target="#bible_word_text"
 								data-dismiss="modal">

@@ -1,11 +1,15 @@
 # -*- coding: utf-8 -*-
 import codecs
-from flask import Flask, request, render_template, jsonify
+import io
+from flask import Flask, request, render_template, jsonify, send_from_directory
 from extractor import BibleWordExtractor, Book, ChapterVerseExtractor
 from bible import Bible
 from db_connector import Execution, DBBook
 from datetime import datetime
 from log import Log
+from base64 import b64encode
+from pptx import build_pptx, PPTX_FILES, PPTX_ERROR_FILE
+from file_util import read_binary_file
 
 app = Flask(__name__)
 
@@ -81,20 +85,19 @@ def show_bible_text():
 
     return jsonify(result=content)
     
-@app.route('/_download_bible_text')
-def downlaod_bible_text():
+@app.route('/_build_pptx_file')
+def build_pptx_file():
     version_list = [KOR_BIBLE, ENG_BIBLE]
     query_with_version = {}
     query_with_version[KOR_BIBLE] = Execution(KOR_BIBLE)
     query_with_version[ENG_BIBLE] = Execution(ENG_BIBLE)
 
     bible_word = request.args.get('bible_word')
-    print(bible_word.encode('utf-8').strip())
     b_remove_annotation = True if request.args.get('remove_annotation') == 'true' else False
     
     book_fullname, chapter_verse = decode_bible_word_form(bible_word)
     if book_fullname is None or chapter_verse is None:
-        return jsonify(result='Error')
+        return send_from_directory(PPTX_FILES, PPTX_ERROR_FILE, as_attachment=True)
 
     chapter = ChapterVerseExtractor.extract_chapter(chapter_verse)
     verses = ChapterVerseExtractor.extract_verses(chapter_verse)
@@ -103,13 +106,13 @@ def downlaod_bible_text():
     for version in version_list:
         text = query_with_version[version].get_text(bible)
         bible.add_text(version, text)
-    content = bible.get_ppt_str(version_list, b_remove_annotation)
-    print(content)
+    pptx_content = bible.get_pptx_content(version_list, b_remove_annotation)
 
     for version in version_list:
         query_with_version[version].close_connection()
-
-    return jsonify(result=content)
+        
+    pptx_file = build_pptx(pptx_content)
+    return send_from_directory(PPTX_FILES, pptx_file, as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
-from ppt import ppt_content
+from pptx import pptx_content
 
 class Bible(object):
     '''Represent Bible class that shows book, chapter, verses and bible text'''
@@ -86,26 +86,28 @@ class Bible(object):
 
         return content
         
-    def get_ppt_content(self, version_list, b_remove_annotation):
+    def get_pptx_content(self, version_list, b_remove_annotation):
         '''Print the string of chapter, verse and text'''
         if not version_list or len(version_list) <= 0:
-            return dict()
+            return []
 
         for version in version_list:
             if not self.text[version]:
-                return dict()
+                return []
                 
         content_list = []
         for verse in self.verse_list:
             curr_text = self.get_print_list_in_verse(verse, version_list, b_remove_annotation)
-            curr_ppt_content = ppt_content(
-                book_chapter_verse=self.get_book_chapter_verse(),
-                version_list=version_list,
-                text=curr_text
-            )
-            content_list.append(curr_ppt_content)
+            if curr_text is not None or len(curr_text) > 0:
+                curr_pptx_content = pptx_content(
+                    book=self.book,
+                    chapter_verse_form=self.chapter_verse_form,
+                    book_chapter_verse=self.get_book_chapter_verse(),
+                    text=curr_text
+                )
+                content_list.append(curr_pptx_content)
             
-        return str(content_list)
+        return content_list
 
 def refine_text(text):
     if not re.search(u'[가-힣]+', text):
