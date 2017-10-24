@@ -8,7 +8,7 @@ from db_connector import Execution, DBBook
 from datetime import datetime
 from log import Log
 from base64 import b64encode
-from pptx import build_pptx, PPTX_FILES, PPTX_ERROR_FILE
+from pptx import build_pptx, remove_old_pptx, PPTX_FILES, PPTX_ERROR_FILE
 from file_util import read_binary_file
 
 app = Flask(__name__)
@@ -112,6 +112,7 @@ def build_pptx_file():
         query_with_version[version].close_connection()
         
     pptx_file = build_pptx(pptx_content)
+    remove_old_pptx()
     return send_from_directory(PPTX_FILES, pptx_file, as_attachment=True)
 
 if __name__ == '__main__':

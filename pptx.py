@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import time
+import os
 from file_util import copy_directory, zip_directory, rename_file, read_file_content, write_file_content, copy_file, remove_directory, remove_file
 
 PPTX_DIR = './pptx/'
@@ -61,6 +62,18 @@ def build_pptx(pptx_content):
     rename_file(output_filename + '.zip', PPTX_FILES + pptx_filename)
     
     return pptx_filename
+    
+def remove_old_pptx():
+    curr_time = time.time()
+    
+    for filename in os.listdir(PPTX_FILES):
+        if filename != PPTX_ERROR_FILE:
+            fullpath = PPTX_FILES + filename
+            file_created = os.path.getmtime(fullpath)
+            
+            if curr_time - file_created > (60 * 60 * 24):
+                print('Remove ' + filename)
+                remove_file(fullpath)
     
 def build_content_types(no_slides):
     content = u''
