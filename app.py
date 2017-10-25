@@ -9,7 +9,6 @@ from datetime import datetime
 from log import Log
 from base64 import b64encode
 from pptx import build_pptx, remove_old_pptx, PPTX_FILES, PPTX_ERROR_FILE
-from file_util import read_binary_file
 
 app = Flask(__name__)
 
